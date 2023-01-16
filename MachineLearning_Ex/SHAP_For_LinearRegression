@@ -29,10 +29,24 @@ X_poly1 = pd.DataFrame(poly1.fit_transform(XX))
 model = LinearRegression()
 model.fit(X_poly1 , yy)
 
-# SHAP computation & Visualization
+
+### SHAP computation & Visualization
 shap.initjs()
 explainer = shap.LinearExplainer(model, X_poly1)
 shap_values = explainer.shap_values(X_poly1)
 
 # Summary Plot
-shap.summary_plot(shap_values, X_poly1)
+fig = plt.figure()
+shap.summary_plot(shap_values, X_poly1, show = False)
+plt.title("Hi")
+plt.show()
+
+fig = plt.figure()
+shap.summary_plot(shap_values, X_poly1, plot_type="bar", show = False)
+plt.title("Hihihi")
+plt.show()
+
+# Get Feature Importance value
+vals= np.abs(shap_values).mean(0)
+feature_importance = pd.DataFrame(list(zip(X_poly1.columns,vals)),columns=['col_name','feature_importance_vals'])
+feature_importance.sort_values(by=['feature_importance_vals'],ascending=False,inplace=True)
