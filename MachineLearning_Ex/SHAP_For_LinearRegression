@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jan 16 08:03:52 2023
+Created on Mon Jan 16 09:40:49 2023
 
 @author: sunjung
 """
-
 
 import numpy as np
 import pandas as pd
@@ -23,14 +22,17 @@ XX = df[['x','y']].values
 yy = df['z'].values
 
 # a + bx + cy model
-poly1 = PolynomialFeatures(degree=2)
+poly1 = PolynomialFeatures(degree=1)
 X_poly1 = pd.DataFrame(poly1.fit_transform(XX))
 
 # fitting
 model = LinearRegression()
-model.fit(XX,yy)
+model.fit(X_poly1 , yy)
 
 # SHAP computation & Visualization
 shap.initjs()
-explainer = shap.LinearExplainer(model, XX)
-shap_values = explainer.shap_values(XX)
+explainer = shap.LinearExplainer(model, X_poly1)
+shap_values = explainer.shap_values(X_poly1)
+
+# Summary Plot
+shap.summary_plot(shap_values, X_poly1)
